@@ -5,34 +5,37 @@ namespace Marvirc\Bin {
 use Hoa\Console;
 use Hoa\Irc;
 use Hoa\Socket;
+use Hoa\Websocket;
 use Hoa\File\Finder;
 
 class Join extends Console\Dispatcher\Kit {
 
     protected $options = array(
-        array('socket',   Console\GetOption::REQUIRED_ARGUMENT, 's'),
-        array('username', Console\GetOption::REQUIRED_ARGUMENT, 'u'),
-        array('channel',  Console\GetOption::REQUIRED_ARGUMENT, 'c'),
-        array('password', Console\GetOption::REQUIRED_ARGUMENT, 'p'),
-        array('verbose',  Console\GetOption::NO_ARGUMENT,       'v'),
-        array('help',     Console\GetOption::NO_ARGUMENT,       'h'),
-        array('help',     Console\GetOption::NO_ARGUMENT,       '?')
+        array('socket',    Console\GetOption::REQUIRED_ARGUMENT, 's'),
+        array('username',  Console\GetOption::REQUIRED_ARGUMENT, 'u'),
+        array('channel',   Console\GetOption::REQUIRED_ARGUMENT, 'c'),
+        array('password',  Console\GetOption::REQUIRED_ARGUMENT, 'p'),
+        array('websocket', Console\GetOption::REQUIRED_ARGUMENT, 'w'),
+        array('verbose',   Console\GetOption::NO_ARGUMENT,       'v'),
+        array('help',      Console\GetOption::NO_ARGUMENT,       'h'),
+        array('help',      Console\GetOption::NO_ARGUMENT,       '?')
     );
 
 
 
     public function main ( ) {
 
-        $socket   = 'tcp://chat.freenode.org:6667';
-        $username = null;
-        $channel  = null;
-        $password = null;
-        $verbose  = false;
+        $socket    = 'tcp://chat.freenode.org:6667';
+        $username  = null;
+        $channel   = null;
+        $password  = null;
+        $websocket = null;
+        $verbose   = false;
 
         while(false !== $c = $this->getOption($v)) switch($c) {
 
             case 's':
-                $socket = $v;
+                $socket = 'tcp://' . $v;
               break;
 
             case 'u':
@@ -45,6 +48,10 @@ class Join extends Console\Dispatcher\Kit {
 
             case 'p':
                 $password = $v;
+              break;
+
+            case 'w':
+                $websocket = 'tcp://' . $v;
               break;
 
             case 'v':
@@ -65,7 +72,24 @@ class Join extends Console\Dispatcher\Kit {
             return $this->usage();
 
         $self   = $this;
+        $group  = new Socket\Connection\Group();
         $client = new Irc\Client(new Socket\Client($socket));
+
+        if(null !== $websocket) {
+
+            $wsClient = new Websocket\Server(new Socket\Server($websocket));
+            $group[]  = $wsClient;
+
+            $wsClient->on('message', function ( $bucket ) use ( $client ) {
+
+                $data = $bucket->getData();
+                $client->say($data['message']);
+
+                return;
+            });
+        }
+
+        $group[] = $client;
 
         // Open.
         $client->on('open', function ( $bucket ) use ( $username, $channel )  {
@@ -145,7 +169,7 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Here we go.
-        $client->run();
+        $group->run();
 
         return;
     }
@@ -155,10 +179,12 @@ class Join extends Console\Dispatcher\Kit {
         echo 'Usage   : join <options>', "\n",
              'Options :', "\n",
              $this->makeUsageOptionsList(array(
-                 's'    => 'Socket (default: tcp://chat.freenode.org:6667).',
+                 's'    => 'Socket (default: chat.freenode.org:6667).',
                  'u'    => 'Username.',
                  'c'    => 'Channel (with the leading #).',
                  'p'    => 'Password.',
+                 'w'    => 'Socket for the WebSocket server (default: null, ' .
+                           'so no server).',
                  'v'    => 'Verbose.',
                  'help' => 'This help.'
              ));
