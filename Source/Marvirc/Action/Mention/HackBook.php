@@ -11,7 +11,7 @@ class HackBook implements \Marvirc\Action\IAction {
 
     public static function getUsage ( ) {
 
-        return 'Get link to an hack book chapter.';
+        return 'Get link to a chapter of the hack book.';
     }
 
     public static function compute ( Array $data ) {
