@@ -77,16 +77,9 @@ class Join extends Console\Dispatcher\Kit {
 
         if(null !== $websocket) {
 
-            $wsClient = new Websocket\Server(new Socket\Server($websocket));
-            $group[]  = $wsClient;
+            $wsServer = new Websocket\Server(new Socket\Server($websocket));
+            $group[]  = $wsServer;
 
-            $wsClient->on('message', function ( $bucket ) use ( $client ) {
-
-                $data = $bucket->getData();
-                $client->say($data['message']);
-
-                return;
-            });
         }
 
         $group[] = $client;
@@ -100,10 +93,19 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Join.
-        $verbose and
-        $client->on('join', function ( $bucket ) use ( $channel ) {
+        $client->on('join', function ( $bucket ) use ( $channel, $wsServer ) {
 
-            echo '[', $channel, '] Joined!', "\n";
+            $data = $bucket->getData();
+            echo '[', $data['channel'], '] Joined!', "\n";
+
+            $client = $bucket->getSource();
+            $wsServer->on('message', function ( $bucket ) use ( $client ) {
+
+                $data = $bucket->getData();
+                $client->say($data['message']);
+
+                return;
+            });
 
             return;
         });
@@ -132,20 +134,22 @@ class Join extends Console\Dispatcher\Kit {
 
         // Kick.
         $verbose and
-        $client->on('kick', function ( $bucket ) use ( $channel ) {
+        $client->on('kick', function ( $bucket ) {
 
-            echo '[', $channel, '] Kicked :-(.', "\n";
+            $node = $bucket->getSource()->getConnection()->getCurrentNode();
+            echo '[', $node->getChannel(), '] Kicked :-(.', "\n";
 
             return;
         });
 
         // Other messages.
         $verbose and
-        $client->on('other-message', function ( $bucket ) use ( $channel ) {
+        $client->on('other-message', function ( $bucket ) {
 
             $data = $bucket->getData();
+            $node = $bucket->getSource()->getConnection()->getCurrentNode();
 
-            echo '[', $channel, '] ';
+            echo '[', $node->getChannel(), '] ';
             Console\Cursor::colorize('foreground(green)');
             echo $data['line'];
             Console\Cursor::colorize('normal');
@@ -155,11 +159,12 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Error.
-        $client->on('error', function ( $bucket ) use ( $channel ) {
+        $client->on('error', function ( $bucket ) {
 
             $data = $bucket->getData();
+            $node = $bucket->getSource()->getConnection()->getCurrentNode();
 
-            echo '[', $channel, '] ';
+            echo '[', $node->getChannel(), '] ';
             Console\Cursor::colorize('foreground(red)');
             echo $data['exception']->raise(true);
             Console\Cursor::colorize('normal');
