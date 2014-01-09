@@ -114,7 +114,7 @@ class Join extends Console\Dispatcher\Kit {
 
             $data = $bucket->getData();
             $bucket->getSource()->say(
-                $self->getAnswer('PrivateMessage', $data),
+                $self->getAnswer('PrivateMessage', $data, 'What?'),
                 $data['from']['nick']
             );
 
@@ -123,11 +123,13 @@ class Join extends Console\Dispatcher\Kit {
 
         $client->on('mention', function ( $bucket ) use ( $self ) {
 
-            $data = $bucket->getData();
-            $bucket->getSource()->say(
-                $data['from']['nick'] . ': ' .
-                $self->getAnswer('Mention', $data)
-            );
+            $data   = $bucket->getData();
+            $answer = $self->getAnswer('Mention', $data, null);
+
+            if(null !== $answer)
+                $bucket->getSource()->say(
+                    $data['from']['nick'] . ': ' . $answer
+                );
 
             return;
         });
@@ -197,7 +199,7 @@ class Join extends Console\Dispatcher\Kit {
         return;
     }
 
-    public function getAnswer ( $messageType, Array $data ) {
+    public function getAnswer ( $messageType, Array $data, $default = null ) {
 
         static $_cache = array();
 
@@ -225,7 +227,7 @@ class Join extends Console\Dispatcher\Kit {
             if(0 !== preg_match($pattern, $data['message']))
                 return $classname::compute($data);
 
-        return 'What?';
+        return $default;
     }
 }
 
