@@ -2,21 +2,21 @@
 
 namespace Marvirc\Action\Mention {
 
-class Help implements \Marvirc\Action\IAction {
+class Date implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#help#i';
+        return '#date|time|today#i';
     }
 
     public static function getUsage ( ) {
 
-        return 'This help.';
+        return 'Get the current datetime from the server.';
     }
 
     public static function compute ( Array $data ) {
 
-        return 'Todo :-).';
+        return date('g\hi, l jS, F Y');
     }
 }
 
