@@ -6,7 +6,7 @@ class LearnManual implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#\blearn.?manual\s+(?<subject>\w+(?:[/\\\]\w+)?)(?:\s+(?<lang>\w{2}))?#i';
+        return '#\blearn\s+(manual\s+)?(?<subject>\w+(?:[/\\\]\w+)?)(?:\s+(?<lang>\w{2}))?#i';
     }
 
     public static function getUsage ( ) {
