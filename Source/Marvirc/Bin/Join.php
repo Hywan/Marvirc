@@ -144,6 +144,22 @@ class Join extends Console\Dispatcher\Kit {
             return;
         });
 
+        // Invite.
+        $client->on('invite', function ( $bucket ) {
+
+            $data = $bucket->getData();
+
+            if('#hoaproject-' !== substr($data['invitation_channel'], 0, 12))
+                return;
+
+            $bucket->getSource()->join(
+                $bucket->getSource()->getConnection()->getCurrentNode()->getUsername(),
+                $data['invitation_channel']
+            );
+
+            return;
+        });
+
         // Other messages.
         $verbose and
         $client->on('other-message', function ( $bucket ) {
