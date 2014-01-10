@@ -6,7 +6,7 @@ class HackBook implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#hack.?book\s+(?<subject>\w+(?:[/\\\]\w+)?)(?:\s+(?<lang>\w{2}))?#i';
+        return '#\bhack.?book\s+(?<subject>\w+(?:[/\\\]\w+)?)(?:\s+(?<lang>\w{2}))?#i';
     }
 
     public static function getUsage ( ) {

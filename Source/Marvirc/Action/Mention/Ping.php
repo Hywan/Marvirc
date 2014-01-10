@@ -6,7 +6,7 @@ class Ping implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#ping#i';
+        return '#\bping\b#i';
     }
 
     public static function getUsage ( ) {

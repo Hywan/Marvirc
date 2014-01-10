@@ -6,7 +6,7 @@ class Date implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#date|time|today#i';
+        return '#\b(date|time|today)\b#i';
     }
 
     public static function getUsage ( ) {

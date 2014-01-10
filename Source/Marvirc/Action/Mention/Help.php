@@ -6,7 +6,7 @@ class Help implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#help#i';
+        return '#\bhelp\b#i';
     }
 
     public static function getUsage ( ) {
