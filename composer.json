@@ -1,3 +1,9 @@
 {
-    "require": …
+    "require": {
+        "hoa/irc"      : "dev-master",
+        "hoa/websocket": "dev-master",
+        "hoa/console"  : "dev-master",
+        "hoa/file"     : "dev-master"
+    },
+    "minimum-stability": "dev"
 }
