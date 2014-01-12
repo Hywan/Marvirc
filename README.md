@@ -13,10 +13,10 @@ Either you install Hoa, or you use Composer:
 
 A CLI is able:
 
-    $ marvirc --socket    chat.freenode.org:6667 \
-              --username  Marvirc                \
-              --channel   '##marvirc-test'       \
-              --websocket 127.0.0.1:8889
+    $ marvirc join --socket    chat.freenode.org:6667 \
+                   --username  Marvirc                \
+                   --channel   '##marvirc-test'       \
+                   --websocket 127.0.0.1:8889
 
 That's all. Use `marvirc.bat` on Windows.
 
@@ -64,10 +64,10 @@ notification on IRC, as soon as you have a WebSocket client. Fortunately for us,
 a dead simple client exists, namely `hoa websocket:client` that uses a readline
 (which works on a regular standard input, a pipe or a redirection). Thus:
 
-    $ marvirc --socket    chat.freenode.org:6667 \
-              --username  Marvirc                \
-              --channel   '##marvirc-test'       \
-              --websocket 127.0.0.1:8889 &
+    $ marvirc join --socket    chat.freenode.org:6667 \
+                   --username  Marvirc                \
+                   --channel   '##marvirc-test'       \
+                   --websocket 127.0.0.1:8889
     $ echo 'You are awesome :-).' | hoa websocket:client --server 127.0.0.1:8889
 
 And then, on `##marvirc-test`, you will see Marvirc saying `You are awesome
