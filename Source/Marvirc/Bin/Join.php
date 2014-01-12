@@ -80,7 +80,6 @@ class Join extends Console\Dispatcher\Kit {
 
             $wsServer = new Websocket\Server(new Socket\Server($websocket));
             $group[]  = $wsServer;
-
         }
 
         $group[] = $client;
