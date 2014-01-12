@@ -3,6 +3,23 @@
 Marvirc is a dead **simple**, extremely **modular** and blazing **fast** IRC bot
 (yup, that's it).
 
+## Installation
+
+Either you install Hoa, or you use Composer:
+
+    $ composer install
+
+## Usage
+
+A CLI is able:
+
+    $ marvirc --socket    chat.freenode.org:6667 \
+              --username  Marvirc                \
+              --channel   '##marvirc-test'       \
+              --websocket 127.0.0.1:8889
+
+That's all. Use `marvirc.bat` on Windows.
+
 ## Features
 
 Marvirc has the following features.
@@ -55,20 +72,3 @@ a dead simple client exists, namely `hoa websocket:client` that uses a readline
 
 And then, on `##marvirc-test`, you will see Marvirc saying `You are awesome
 :-)`. Imagine a Git hook that notifies you about what you need… exciting aye?
-
-## Installation
-
-Either you install Hoa, or you use Composer:
-
-    $ composer install
-
-## Usage
-
-A CLI is able:
-
-    $ marvirc --socket    chat.freenode.org:6667 \
-              --username  Marvirc                \
-              --channel   '##marvirc-test'       \
-              --websocket 127.0.0.1:8889
-
-That's all. Use `marvirc.bat` on Windows.
