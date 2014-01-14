@@ -1,6 +1,6 @@
 # Marvirc
 
-Marvirc is a dead **simple**, extremely **modular** and blazing **fast** IRC bot
+Marvirc is a dead **simple**, extremely **modular** and blazing **fast IRC bot**
 (yup, that's it).
 
 ## Installation
@@ -11,14 +11,32 @@ Either you install Hoa, or you use Composer:
 
 ## Usage
 
-A CLI is able:
+Marvirc can be run from CLI with `marvirc`. By default, `marvirc welcome` will
+run. It lists the available commands. The only one for now is `marvirc join`.
+The `join` command has the following options:
+
+  * `-s`/`--socket`, the socket URI (default: `chat.freenode.org:6667`),
+  * `-u`/`--username`, username of Marvirc,
+  * `-c`/`--channel`, the first channel to join, with the leading `#`,
+  * `-p`/`--password`, the password of the first channel (default: `null`, i.e.
+    no password),
+  * `-w`/`--websocket`, the WebSocket URI (default: `null`, i.e. no server will
+    be started),
+  * `-v`/`--verbose`, be verbose or not,
+  * `-h`/`-?`/`--help`, the help.
+
+So, to join the channel `#hoaproject` on Freenode with the `FakeMarvirc`
+username, you will write:
 
     $ marvirc join --socket    chat.freenode.org:6667 \
-                   --username  Marvirc                \
-                   --channel   '##marvirc-test'       \
-                   --websocket 127.0.0.1:8889
+                   --username  FakeMarvirc            \
+                   --channel   '#hoaproject'
 
-That's all. Use `marvirc.bat` on Windows.
+That's all. On Windows, simply use `marvirc.bat`.
+
+**Tips**: use `nohup` to detach Marvirc from your current SSH session:
+
+    $ nohup marvirc join …
 
 ## Features
 
@@ -35,7 +53,7 @@ libraries: [`Hoa\Irc`](https://github.com/hoaproject/Irc),
 [`Hoa\Websocket`](https://github.com/hoaproject/Websocket) for an extreme
 modularity, see below.
 
-Also, is works on Linux, BSD and even Windows (yup!).
+Also, it works on Linux, BSD and even Windows (yup!).
 
 ### Custom actions on mentions, messages and private messages
 
