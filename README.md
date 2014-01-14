@@ -1,11 +1,9 @@
 ![Marvirc](http://hywan.github.io/Marvirc/Static/Logo.png)
 
-# Marvirc
-
 Marvirc is a dead **simple**, extremely **modular** and blazing **fast IRC bot**
 (yup, that's it).
 
-## Installation
+# Installation
 
 With [Composer](http://getcomposer.org/), you only need to type:
 
@@ -14,7 +12,7 @@ With [Composer](http://getcomposer.org/), you only need to type:
 Or, if you have [Hoa](http://hoa-project.net/) widely-installed (in
 `/usr/local/lib/Hoa`) and up to date, you need nothing particular.
 
-## Usage
+# Usage
 
 Marvirc can be run from CLI with `marvirc`. By default, `marvirc welcome` will
 run. It lists the available commands. The only one for now is `marvirc join`.
@@ -45,11 +43,11 @@ That's all. On Windows, simply use `marvirc.bat`.
 
     $ nohup marvirc join …
 
-## Features
+# Features
 
 Marvirc has the following features.
 
-### Based on Hoa
+## Based on Hoa
 
 [Hoa](http://hoa-project.net/) is a **modular**, **extensible** and
 **structured** set of PHP libraries. Marvirc is based on the following awesome
@@ -62,7 +60,7 @@ modularity, see below.
 
 Also, it works on Linux, BSD and even Windows (yup!).
 
-### Custom actions on mentions, messages and private messages
+## Custom actions on mentions, messages and private messages
 
 Marvirc is able to react to mentions, messages and private messages. Actions are
 attached to each category through simple classes. An action interface is
@@ -111,7 +109,7 @@ be like:
 
 Really simple easy isn't?
 
-### Multi-channels
+## Multi-channels
 
 A single client instance can be present and interact on several channels at the
 same time, including private discussions.
@@ -136,7 +134,7 @@ The footprint of an instance is quite ridiculous. Thus, if you want to run
 several clients, connected to several IRC servers, it is possible, discreet and
 understated.
 
-### Possession through WebSocket: realtime notifications
+## Possession through WebSocket: realtime notifications
 
 A WebSocket server can run side-by-side with the IRC client. Every message
 received by the WebSocket server is redirected verbatim on the IRC client. In
