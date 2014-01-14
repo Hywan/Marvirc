@@ -11,14 +11,15 @@ use Hoa\File\Finder;
 class Join extends Console\Dispatcher\Kit {
 
     protected $options = array(
-        array('socket',    Console\GetOption::REQUIRED_ARGUMENT, 's'),
-        array('username',  Console\GetOption::REQUIRED_ARGUMENT, 'u'),
-        array('channel',   Console\GetOption::REQUIRED_ARGUMENT, 'c'),
-        array('password',  Console\GetOption::REQUIRED_ARGUMENT, 'p'),
-        array('websocket', Console\GetOption::REQUIRED_ARGUMENT, 'w'),
-        array('verbose',   Console\GetOption::NO_ARGUMENT,       'v'),
-        array('help',      Console\GetOption::NO_ARGUMENT,       'h'),
-        array('help',      Console\GetOption::NO_ARGUMENT,       '?')
+        array('socket',         Console\GetOption::REQUIRED_ARGUMENT, 's'),
+        array('username',       Console\GetOption::REQUIRED_ARGUMENT, 'u'),
+        array('channel',        Console\GetOption::REQUIRED_ARGUMENT, 'c'),
+        array('password',       Console\GetOption::REQUIRED_ARGUMENT, 'p'),
+        array('channel-filter', Console\GetOption::REQUIRED_ARGUMENT, 'f'),
+        array('websocket',      Console\GetOption::REQUIRED_ARGUMENT, 'w'),
+        array('verbose',        Console\GetOption::NO_ARGUMENT,       'v'),
+        array('help',           Console\GetOption::NO_ARGUMENT,       'h'),
+        array('help',           Console\GetOption::NO_ARGUMENT,       '?')
     );
 
 
@@ -29,6 +30,7 @@ class Join extends Console\Dispatcher\Kit {
         $username  = null;
         $channel   = null;
         $password  = null;
+        $filter    = null;
         $websocket = null;
         $verbose   = false;
 
@@ -48,6 +50,10 @@ class Join extends Console\Dispatcher\Kit {
 
             case 'p':
                 $password = $v;
+              break;
+
+            case 'f':
+                $filter = $v;
               break;
 
             case 'w':
@@ -147,11 +153,11 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Invite.
-        $client->on('invite', function ( $bucket ) {
+        $client->on('invite', function ( $bucket ) use ( $filter ) {
 
             $data = $bucket->getData();
 
-            if('#hoaproject-' !== substr($data['invitation_channel'], 0, 12))
+            if(0 === preg_match($filter, $data['invitation_channel']))
                 return;
 
             $bucket->getSource()->join(
@@ -208,6 +214,8 @@ class Join extends Console\Dispatcher\Kit {
                  'u'    => 'Username.',
                  'c'    => 'Channel (with the leading #).',
                  'p'    => 'Password.',
+                 'f'    => 'Channels that can be joined (a PCRE pattern, ' .
+                           'with delimiters and options).',
                  'w'    => 'Socket for the WebSocket server (default: null, ' .
                            'so no server).',
                  'v'    => 'Verbose.',
