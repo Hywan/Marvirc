@@ -1,4 +1,4 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/Source/Marvirc/Cli.php';
+require_once __DIR__ . '/Source/Marvirc/Bin/Marvirc.php';

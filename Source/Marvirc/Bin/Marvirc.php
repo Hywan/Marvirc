@@ -2,14 +2,20 @@
 
 namespace {
 
-require dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . '/Hoa.link.php';
+require dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR .
+        'Autoloader.php';
 
-Hoa\Core::enableErrorHandler();
-Hoa\Core::enableExceptionHandler();
+use Hoa\Core;
+use Hoa\Router;
+use Hoa\Dispatcher;
+use Hoa\Console;
+
+Core::enableErrorHandler();
+Core::enableExceptionHandler();
 
 try {
 
-    $router = new Hoa\Router\Cli();
+    $router = new Router\Cli();
     $router->get(
         'g',
         '(?<command>\w+)?(?<_tail>.*?)',
@@ -18,7 +24,7 @@ try {
         array('command' => 'welcome')
     );
 
-    $dispatcher = new Hoa\Dispatcher\Basic(array(
+    $dispatcher = new Dispatcher\Basic(array(
         'synchronous.controller'
             => 'Marvirc\Bin\(:%variables.command:lU:)',
         'synchronous.action'
@@ -27,7 +33,7 @@ try {
     $dispatcher->setKitName('Hoa\Console\Dispatcher\Kit');
     exit($dispatcher->dispatch($router));
 }
-catch ( \Hoa\Core\Exception $e ) {
+catch ( Core\Exception $e ) {
 
     $message = $e->raise(true);
     $code    = 1;
@@ -38,9 +44,9 @@ catch ( \Exception $e ) {
     $code    = 2;
 }
 
-Hoa\Console\Cursor::colorize('foreground(white) background(red)');
+Console\Cursor::colorize('foreground(white) background(red)');
 echo $message, "\n";
-Hoa\Console\Cursor::colorize('normal');
+Console\Cursor::colorize('normal');
 exit($code);
 
 }
