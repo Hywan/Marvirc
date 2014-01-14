@@ -146,7 +146,7 @@ a dead simple client exists, namely `hoa websocket:client` that uses a readline
     $ marvirc join --socket    chat.freenode.org:6667 \
                    --username  FakeMarvirc            \
                    --channel   '#hoaproject'          \
-                   --websocket 127.0.0.1:8889
+                   --websocket 127.0.0.1:8889 &
     $ echo 'You are awesome :-).' | hoa websocket:client --server 127.0.0.1:8889
 
 And then, on `#hoaproject`, you will see Marvirc saying `You are awesome :-)`.
