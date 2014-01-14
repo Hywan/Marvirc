@@ -1,3 +1,5 @@
+![Marvirc](http://hywan.github.io/Marvirc/Static/Logo.png)
+
 # Marvirc
 
 Marvirc is a dead **simple**, extremely **modular** and blazing **fast IRC bot**
