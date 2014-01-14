@@ -68,6 +68,47 @@ provided and asks to write only three methods: `getPattern`, `getUsage` and
 `compute`. Based on the pattern, Marvirc will choose the appropriated actions to
 run.
 
+Here is a simple example of the “date” command that will run when the “date”,
+“time” or “today” keywords appear on mention, in
+`Source/Marvirc/Action/Mention/Date.php`:
+
+```php
+<?php
+
+namespace Marvirc\Action\Mention {
+
+class Date implements \Marvirc\Action\IAction {
+
+    public static function getPattern ( ) {
+
+        return '#\b(date|time|today)\b#i';
+    }
+
+    public static function getUsage ( ) {
+
+        return 'Get the current datetime from the server.';
+    }
+
+    public static function compute ( Array $data ) {
+
+        return date('g\hi, l jS, F Y');
+    }
+}
+
+}
+```
+
+So, if the username of Marvirc is `FakeMarvirc`, when someone writes:
+
+    Someone> FakeMarvirc: what time is it?
+
+Marvirc will receive a mention and wil run the “date” command. The result will
+be like:
+
+    FakeMarvirc> Someone: 1h23, Monday 1st January 2042
+
+Really simple easy isn't?
+
 ### Multi-channels
 
 A single client instance can be present and interact on several channels at the
