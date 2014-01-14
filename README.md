@@ -5,9 +5,12 @@ Marvirc is a dead **simple**, extremely **modular** and blazing **fast IRC bot**
 
 ## Installation
 
-Either you install Hoa, or you use Composer:
+With [Composer](http://getcomposer.org/), you only need to type:
 
     $ composer install
+
+Or, if you have [Hoa](http://hoa-project.net/) widely-installed (in
+`/usr/local/lib/Hoa`) and up to date, you need nothing particular.
 
 ## Usage
 
@@ -15,13 +18,15 @@ Marvirc can be run from CLI with `marvirc`. By default, `marvirc welcome` will
 run. It lists the available commands. The only one for now is `marvirc join`.
 The `join` command has the following options:
 
-  * `-s`/`--socket`, the socket URI (default: `chat.freenode.org:6667`),
+  * `-s`/`--socket`, the socket client URI (default: `chat.freenode.org:6667`),
   * `-u`/`--username`, username of Marvirc,
   * `-c`/`--channel`, the first channel to join, with the leading `#`,
   * `-p`/`--password`, the password of the first channel (default: `null`, i.e.
     no password),
-  * `-w`/`--websocket`, the WebSocket URI (default: `null`, i.e. no server will
-    be started),
+  * `-f`/`--channel-filter` channels that can be joined, based on a PCRE
+    pattern, with delimiters and options,
+  * `-w`/`--websocket`, the WebSocket server URI (default: `null`, i.e. no
+    server will be started),
   * `-v`/`--verbose`, be verbose or not,
   * `-h`/`-?`/`--help`, the help.
 
@@ -68,29 +73,40 @@ run.
 A single client instance can be present and interact on several channels at the
 same time, including private discussions.
 
-A list of channels where the bot can be invited can be provided. Thus, you can
-control where the bot will interact when someone runs:
+A PCRE pattern representing channels, where the bot can be invited, can be
+provided through the `-f`/``--channel-filter` option. Thus, you can control
+where the bot will interact when someone runs:
 
     > /invite Marvirc
+
+For example, with:
+
+    $ marvirc join --socket         chat.freenode.org:6667 \
+                   --username       FakeMarvirc            \
+                   --channel        '#hoaproject'          \
+                   --channel-filter '/#hoaproject-.+/'
+
+The bot can be invited on `#hoaproject-foo`, `#hoaproject-bar-baz` but not
+`#qux`.
 
 The footprint of an instance is quite ridiculous. Thus, if you want to run
 several clients, connected to several IRC servers, it is possible, discreet and
 understated.
 
-### Possession through WebSocket
+### Possession through WebSocket: realtime notifications
 
 A WebSocket server can run side-by-side with the IRC client. Every message
 received by the WebSocket server is redirected verbatim on the IRC client. In
-this way, every tools, such Git hooks, cron tasks, … is able to send a
+this way, every tools, such Git hooks, cron tasks etc, is able to send a
 notification on IRC, as soon as you have a WebSocket client. Fortunately for us,
 a dead simple client exists, namely `hoa websocket:client` that uses a readline
 (which works on a regular standard input, a pipe or a redirection). Thus:
 
     $ marvirc join --socket    chat.freenode.org:6667 \
-                   --username  Marvirc                \
-                   --channel   '##marvirc-test'       \
+                   --username  FakeMarvirc            \
+                   --channel   '#hoaproject'          \
                    --websocket 127.0.0.1:8889
     $ echo 'You are awesome :-).' | hoa websocket:client --server 127.0.0.1:8889
 
-And then, on `##marvirc-test`, you will see Marvirc saying `You are awesome
-:-)`. Imagine a Git hook that notifies you about what you need… exciting aye?
+And then, on `#hoaproject`, you will see Marvirc saying `You are awesome :-)`.
+Imagine a Git hook that notifies you about what you need… exciting aye?
