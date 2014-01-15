@@ -33,9 +33,9 @@ The `join` command has the following options:
 So, to join the channel `#hoaproject` on Freenode with the `FakeMarvirc`
 username, you will write:
 
-    $ marvirc join --socket    chat.freenode.org:6667 \
-                   --username  FakeMarvirc            \
-                   --channel   '#hoaproject'
+    $ marvirc join --socket   chat.freenode.org:6667 \
+                   --username FakeMarvirc            \
+                   --channel  '#hoaproject'
 
 That's all. On Windows, simply use `marvirc.bat`.
 
@@ -115,10 +115,10 @@ A single client instance can be present and interact on several channels at the
 same time, including private discussions.
 
 A PCRE pattern representing channels, where the bot can be invited, can be
-provided through the `-f`/``--channel-filter` option. Thus, you can control
-where the bot will interact when someone runs:
+provided through the `-f`/`--channel-filter` option. Thus, you can control where
+the bot will interact when someone runs:
 
-    > /invite Marvirc
+    Someone> /invite Marvirc
 
 For example, with:
 
