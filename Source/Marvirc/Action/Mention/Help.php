@@ -42,8 +42,10 @@ class Help implements \Marvirc\Action\IAction {
         }
 
         $name      = $matches['action'];
-        // file_exists.
         $classname = __NAMESPACE__ . '\\' . $name;
+
+        if(false === class_exists($classname))
+            return;
 
         return $classname::getUsage() . "\n" .
                $classname::getPattern();
