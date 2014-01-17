@@ -30,7 +30,7 @@ class Join extends Console\Dispatcher\Kit {
         $username  = null;
         $channel   = null;
         $password  = null;
-        $filter    = null;
+        $filter    = '/^$/';
         $websocket = null;
         $verbose   = false;
 
