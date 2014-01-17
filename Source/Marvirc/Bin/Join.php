@@ -77,14 +77,21 @@ class Join extends Console\Dispatcher\Kit {
         if(empty($username) || empty($channel))
             return $this->usage();
 
-        $self     = $this;
-        $group    = new Socket\Connection\Group();
-        $client   = new Irc\Client(new Socket\Client($socket));
-        $wsServer = null;
+        $self      = $this;
+        $group     = new Socket\Connection\Group();
+        $client    = new Irc\Client(new Socket\Client($socket));
+        $wsServer  = null;
 
         if(null !== $websocket) {
 
             $wsServer = new Websocket\Server(new Socket\Server($websocket));
+            $wsServer->on('message', function ( $bucket ) use ( $channel, $client ) {
+
+                $data = $bucket->getData();
+                $client->say($data['message'], $channel);
+
+                return;
+            });
             $group[]  = $wsServer;
         }
 
@@ -99,21 +106,10 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Join.
-        $client->on('join', function ( $bucket ) use ( $channel, $wsServer ) {
+        $client->on('join', function ( $bucket ) {
 
             $data = $bucket->getData();
             echo '[', $data['channel'], '] Joined!', "\n";
-
-            $client = $bucket->getSource();
-
-            if(null !== $wsServer)
-                $wsServer->on('message', function ( $bucket ) use ( $client ) {
-
-                    $data = $bucket->getData();
-                    $client->say($data['message']);
-
-                    return;
-                });
 
             return;
         });
