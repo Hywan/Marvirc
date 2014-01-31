@@ -6,7 +6,7 @@ class Status implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#\bhow\s+are\s+you\b#i';
+        return '#\b(what(\'s|\s+is)\s+up|how\s+are\s+you\b#i';
     }
 
     public static function getUsage ( ) {
@@ -21,7 +21,7 @@ class Status implements \Marvirc\Action\IAction {
         $diff  = $now->diff($start);
 
         return 'Fine, thank you. I am waked up since ' .
-               $start->format('l, NS F Y') .
+               $start->format('l, jS F Y') .
                ' (since ' .
                static::p($diff->y, 'year') .
                static::p($diff->m, 'month') .
