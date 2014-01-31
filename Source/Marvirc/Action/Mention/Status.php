@@ -6,7 +6,7 @@ class Status implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#\b(what(\'s|\s+is)\s+up|how\s+are\s+you\b#i';
+        return '#\b(what(\'s|\s+is)\s+up|how\s+are\s+you)\b#i';
     }
 
     public static function getUsage ( ) {
