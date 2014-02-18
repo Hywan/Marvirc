@@ -138,6 +138,19 @@ class Join extends Console\Dispatcher\Kit {
             return;
         });
 
+        $client->on('message', function ( $bucket ) use ( $self ) {
+
+            $data   = $bucket->getData();
+            $answer = $self->getAnswer('Message', $data, null);
+
+            if(null !== $answer)
+                $bucket->getSource()->say(
+                    $data['from']['nick'] . ': ' . $answer
+                );
+
+            return;
+        });
+
         // Kick.
         $verbose and
         $client->on('kick', function ( $bucket ) {
