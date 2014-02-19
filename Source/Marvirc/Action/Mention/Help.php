@@ -8,7 +8,7 @@ class Help implements \Marvirc\Action\IAction {
 
     public static function getPattern ( ) {
 
-        return '#\bhelp(\s+(?<action>\w+))?\b#i';
+        return '#\bhelp(\s+(?<action>[\w\\\/]+))?\b#i';
     }
 
     public static function getUsage ( ) {
@@ -25,7 +25,9 @@ class Help implements \Marvirc\Action\IAction {
         if(!isset($matches['action'])) {
 
             $finder = new Finder();
-            $finder->in(__DIR__)
+            $finder->in(dirname(__DIR__) . DS . 'Message')
+                   ->in(dirname(__DIR__) . DS . 'Mention')
+                   ->in(dirname(__DIR__) . DS . 'PrivateMessage')
                    ->files()
                    ->name('#\.php$#');
 
@@ -34,19 +36,23 @@ class Help implements \Marvirc\Action\IAction {
             foreach($finder as $entry) {
 
                 $name      = substr($entry->getBasename(), 0, -4);
-                $classname = __NAMESPACE__ . '\\' . $name;
-                $out[]     = $name . "\t\t" . $classname::getUsage();
+                $type      = basename(dirname($entry->getPathname()));
+                $classname = 'Marvirc\Action\\' . $type . '\\' . $name;
+                $out[]     = $type . '/' . $name . "\t\t" . $classname::getUsage();
             }
 
             return implode("\n", $out);
         }
 
         $name      = $matches['action'];
-        // file_exists.
-        $classname = __NAMESPACE__ . '\\' . $name;
+        $classname = 'Marvirc\Action\\' . str_replace('/', '\\', $name);
 
-        return $classname::getUsage() . "\n" .
-               $classname::getPattern();
+        if(false === class_exists($classname))
+            return $name . ' does not exist.';
+
+        return $classname::getUsage() . "\n\n" .
+               'Pattern:' . "\n" .
+               "\t" . $classname::getPattern();
     }
 }
 
