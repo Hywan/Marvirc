@@ -195,6 +195,21 @@ class Join extends Console\Dispatcher\Kit {
             return;
         });
 
+        // Message.
+        $client->on('message', function ( $bucket ) use ( $self ) {
+
+            $data   = $bucket->getData();
+            $answer = null;
+
+            if(0 !== preg_match('/!(?=\b)/', $data['message']))
+                $answer = $self->getAnswer('Mention', $data, null);
+
+            if(null !== $answer)
+                $bucket->getSource()->say($answer);
+
+            return;
+        });
+
         // Here we go.
         $group->run();
 
