@@ -2,49 +2,20 @@
 
 namespace Marvirc {
 
-use Hoa\Socket\Client;
-use Hoa\Http\Response\Response;
-use Hoa\Http\Request;
-
 class Url {
 
-    /**
-     * @var string contains error message for code
-     */
-    protected static $errorMessage;
+    protected static $_errorMessage;
 
-    /**
-     * getErrorMessage
-     *
-     * @static
-     * @access public
-     * @return string
-     */
-    public static function getErrorMessage()
-    {
-        return static::$errorMessage;
-    }
+    public static function check ( $url ) {
 
-    /**
-     * check Make a request to url and define which return code
-     * set static error properties to display error during the process
-     *
-     * @param string $url
-     * @static
-     * @access public
-     * @return string
-     */
-    public static function checkUrl($url) {
-        $url = parse_url($url);
-
-        $client = new Client('tcp://'. $url['host'] . ':80');
+        $url    = parse_url($url);
+        $client = new \Hoa\Socket\Client('tcp://'. $url['host'] . ':80');
         $client->connect();
 
-        if ('https' === $url['scheme']) {
-            $client->setEncryption(true, Client::ENCRYPTION_TLS);
-        }
+        if('https' === $url['scheme'])
+            $client->setEncryption(true, $client::ENCRYPTION_TLS);
 
-        $request = new Request();
+        $request = new \Hoa\Http\Request();
         $request->setMethod($request::METHOD_GET);
         $request->setUrl($url['path']);
 
@@ -53,26 +24,34 @@ class Url {
 
         $client->writeAll($request);
 
-        $response = new Response(false);
+        $response = new \Hoa\Http\Response(false);
         $response->parse($client->readAll());
 
         $client->close();
 
-        switch ($response['status']) {
-            case Response::STATUS_OK:
-            case Response::STATUS_MOVED_PERMANENTLY:
-                break;
-            case Response::STATUS_FORBIDDEN:
-            case Response::STATUS_NOT_FOUND:
-            case Response::STATUS_INTERNAL_SERVER_ERROR:
-                static::$errorMessage = $response['status'];
-                break;
+        switch($response['status']) {
+
+            case $response::STATUS_OK:
+            case $response::STATUS_MOVED_PERMANENTLY:
+              break;
+
+            case $response::STATUS_FORBIDDEN:
+            case $response::STATUS_NOT_FOUND:
+            case $response::STATUS_INTERNAL_SERVER_ERROR:
+                static::$_errorMessage = $response['status'];
+              break;
+
             default:
-                static::$errorMessage = 'Error while getting status code!';
-                break;
+                static::$_errorMessage = 'Error while getting status code.';
+              break;
         }
 
         return $response['status'];
+    }
+
+    public static function getErrorMessage ( ) {
+
+        return static::$_errorMessage;
     }
 }
 

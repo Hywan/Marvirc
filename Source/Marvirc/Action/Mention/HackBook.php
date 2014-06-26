@@ -2,13 +2,7 @@
 
 namespace Marvirc\Action\Mention {
 
-use Marvirc\Url;
-use Hoa\Http\Response\Response;
-
 class HackBook implements \Marvirc\Action\IAction {
-
-
-    protected static $hostname = 'hoa-project.net';
 
     public static function getPattern ( ) {
 
@@ -32,15 +26,15 @@ class HackBook implements \Marvirc\Action\IAction {
         else
             $library = $subject;
 
-        $path = (isset($matches['lang']) ? ucfirst(strtolower($matches['lang'])) . '/' : '') .
-            'Literature/Hack/' . ucfirst(strtolower($library)) . '.html';
+        $url  = 'hoa://hoa-project.net/' .
+                (isset($matches['lang']) ? ucfirst(strtolower($matches['lang'])) . '/' : '') .
+                'Literature/Hack/' . ucfirst(strtolower($library)) . '.html';
+        $code = \Marvirc\Url::check($url);
 
-        $url = 'http://' . static::$hostname . '/' . $path;
-
-        $code = Url::checkUrl($url);
-
-        return (Response::STATUS_OK === $code
-            || Response::STATUS_MOVED_PERMANENTLY === $code) ? $url : Url::getErrorMessage();
+        return (   $code === \Hoa\Http\Response::STATUS_OK
+                || $code === \Hoa\Http\Response::STATUS_MOVED_PERMANENTLY)
+                   ? $url
+                   : \Marvirc\Url::getErrorMessage();
     }
 }
 
