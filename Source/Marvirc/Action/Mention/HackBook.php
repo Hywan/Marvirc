@@ -26,7 +26,7 @@ class HackBook implements \Marvirc\Action\IAction {
         else
             $library = $subject;
 
-        $url  = 'hoa://hoa-project.net/' .
+        $url  = 'http://hoa-project.net/' .
                 (isset($matches['lang']) ? ucfirst(strtolower($matches['lang'])) . '/' : '') .
                 'Literature/Hack/' . ucfirst(strtolower($library)) . '.html';
         $code = \Marvirc\Url::check($url);
