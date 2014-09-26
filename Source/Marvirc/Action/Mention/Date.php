@@ -1,8 +1,10 @@
 <?php
 
-namespace Marvirc\Action\Mention {
+namespace Marvirc\Action\Mention;
 
-class Date implements \Marvirc\Action\IAction {
+use Marvirc\Action;
+
+class Date implements Action\IAction {
 
     public static function getPattern ( ) {
 
@@ -18,6 +20,4 @@ class Date implements \Marvirc\Action\IAction {
 
         return date('g\hi, l jS, F Y');
     }
-}
-
 }

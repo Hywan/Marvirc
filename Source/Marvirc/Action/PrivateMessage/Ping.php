@@ -1,7 +1,7 @@
 <?php
 
-namespace Marvirc\Action\PrivateMessage {
+namespace Marvirc\Action\PrivateMessage;
 
-class Ping extends \Marvirc\Action\Mention\Ping { }
+use Marvirc\Action\Mention;
 
-}
+class Ping extends Mention\Ping { }

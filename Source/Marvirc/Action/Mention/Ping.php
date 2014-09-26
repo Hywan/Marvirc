@@ -1,8 +1,10 @@
 <?php
 
-namespace Marvirc\Action\Mention {
+namespace Marvirc\Action\Mention;
 
-class Ping implements \Marvirc\Action\IAction {
+use Marvirc\Action;
+
+class Ping implements Action\IAction {
 
     public static function getPattern ( ) {
 
@@ -18,6 +20,4 @@ class Ping implements \Marvirc\Action\IAction {
 
         return 'pong!';
     }
-}
-
 }

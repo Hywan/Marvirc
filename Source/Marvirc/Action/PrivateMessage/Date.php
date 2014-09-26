@@ -1,7 +1,7 @@
 <?php
 
-namespace Marvirc\Action\PrivateMessage {
+namespace Marvirc\Action\PrivateMessage;
 
-class Date extends \Marvirc\Action\Mention\Date { }
+use Marvirc\Action\Mention;
 
-}
+class Date extends Mention\Date { }

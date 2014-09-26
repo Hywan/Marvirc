@@ -1,10 +1,11 @@
 <?php
 
-namespace Marvirc\Action\Mention {
+namespace Marvirc\Action\Mention;
 
+use Marvirc\Action;
 use Hoa\File\Finder;
 
-class Help implements \Marvirc\Action\IAction {
+class Help implements Action\IAction {
 
     public static function getPattern ( ) {
 
@@ -54,6 +55,4 @@ class Help implements \Marvirc\Action\IAction {
                'Pattern:' . "\n" .
                "\t" . $classname::getPattern();
     }
-}
-
 }

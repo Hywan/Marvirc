@@ -1,7 +1,7 @@
 <?php
 
-namespace Marvirc\Action\PrivateMessage {
+namespace Marvirc\Action\PrivateMessage;
 
-class Help extends \Marvirc\Action\Mention\Help { }
+use Marvirc\Action\Mention;
 
-}
+class Help extends Mention\Help { }
