@@ -22,10 +22,10 @@ try {
         ['command' => 'welcome']
     );
 
-    $dispatcher = new Dispatcher\Basic([
-        'synchronous.controller'
+    $dispatcher = new Dispatcher\ClassMethod([
+        'synchronous.call'
             => 'Marvirc\Bin\(:%variables.command:lU:)',
-        'synchronous.action'
+        'synchronous.able'
             => 'main'
     ]);
     $dispatcher->setKitName('Hoa\Console\Dispatcher\Kit');
