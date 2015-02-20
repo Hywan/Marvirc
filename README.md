@@ -102,12 +102,12 @@ So, if the username of Marvirc is `FakeMarvirc`, when someone writes:
 
     Someone> FakeMarvirc: what time is it?
 
-Marvirc will receive a mention and wil run the “date” command. The result will
+Marvirc will receive a mention and will run the “date” command. The result will
 be like:
 
     FakeMarvirc> Someone: 1h23, Monday 1st January 2042
 
-Really simple easy isn't?
+Really simple isn't?
 
 ## Multi-channels
 

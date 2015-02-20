@@ -1,23 +1,7 @@
 <?php
 
-namespace Marvirc\Action\PrivateMessage {
+namespace Marvirc\Action\PrivateMessage;
 
-class Ping implements \Marvirc\Action\IAction {
+use Marvirc\Action\Mention;
 
-    public static function getPattern ( ) {
-
-        return '#\bping\b#i';
-    }
-
-    public static function getUsage ( ) {
-
-        return 'Ping the bot.';
-    }
-
-    public static function compute ( Array $data ) {
-
-        return 'pong!';
-    }
-}
-
-}
+class Ping extends Mention\Ping { }

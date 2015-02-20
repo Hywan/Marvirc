@@ -1,7 +1,5 @@
 <?php
 
-namespace {
-
 require dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR .
         'Autoloader.php';
 
@@ -21,15 +19,15 @@ try {
         '(?<command>\w+)?(?<_tail>.*?)',
         'Main',
         'Main',
-        array('command' => 'welcome')
+        ['command' => 'welcome']
     );
 
-    $dispatcher = new Dispatcher\Basic(array(
-        'synchronous.controller'
+    $dispatcher = new Dispatcher\ClassMethod([
+        'synchronous.call'
             => 'Marvirc\Bin\(:%variables.command:lU:)',
-        'synchronous.action'
+        'synchronous.able'
             => 'main'
-    ));
+    ]);
     $dispatcher->setKitName('Hoa\Console\Dispatcher\Kit');
     exit($dispatcher->dispatch($router));
 }
@@ -48,5 +46,3 @@ Console\Cursor::colorize('foreground(white) background(red)');
 echo $message, "\n";
 Console\Cursor::colorize('normal');
 exit($code);
-
-}

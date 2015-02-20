@@ -1,58 +1,7 @@
 <?php
 
-namespace Marvirc\Action\PrivateMessage {
+namespace Marvirc\Action\PrivateMessage;
 
-use Hoa\File\Finder;
+use Marvirc\Action\Mention;
 
-class Help implements \Marvirc\Action\IAction {
-
-    public static function getPattern ( ) {
-
-        return '#\bhelp(\s+(?<action>[\w\\\/]+))?\b#i';
-    }
-
-    public static function getUsage ( ) {
-
-        return 'This help.';
-    }
-
-    public static function compute ( Array $data ) {
-
-        $pattern = static::getPattern();
-
-        preg_match($pattern, $data['message'], $matches);
-
-        if(!isset($matches['action'])) {
-
-            $finder = new Finder();
-            $finder->in(dirname(__DIR__) . DS . 'Mention')
-                   ->in(dirname(__DIR__) . DS . 'PrivateMessage')
-                   ->files()
-                   ->name('#\.php$#');
-
-            $out = array();
-
-            foreach($finder as $entry) {
-
-                $name      = substr($entry->getBasename(), 0, -4);
-                $type      = basename(dirname($entry->getPathname()));
-                $classname = 'Marvirc\Action\\' . $type . '\\' . $name;
-                $out[]     = $type . '/' . $name . "\t\t" . $classname::getUsage();
-            }
-
-            return implode("\n", $out);
-        }
-
-        $name      = $matches['action'];
-        $classname = 'Marvirc\Action\\' . str_replace('/', '\\', $name);
-
-        if(false === class_exists($classname))
-            return $name . ' does not exist.';
-
-        return $classname::getUsage() . "\n\n" .
-               'Pattern:' . "\n" .
-               "\t" . $classname::getPattern();
-    }
-}
-
-}
+class Help extends Mention\Help { }

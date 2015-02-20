@@ -1,23 +1,7 @@
 <?php
 
-namespace Marvirc\Action\PrivateMessage {
+namespace Marvirc\Action\PrivateMessage;
 
-class Date implements \Marvirc\Action\IAction {
+use Marvirc\Action\Mention;
 
-    public static function getPattern ( ) {
-
-        return '#\b(date|time|today)\b#i';
-    }
-
-    public static function getUsage ( ) {
-
-        return 'Get the current datetime from the server.';
-    }
-
-    public static function compute ( Array $data ) {
-
-        return date('g\hi, l jS, F Y');
-    }
-}
-
-}
+class Date extends Mention\Date { }

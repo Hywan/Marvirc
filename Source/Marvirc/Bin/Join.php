@@ -1,6 +1,6 @@
 <?php
 
-namespace Marvirc\Bin {
+namespace Marvirc\Bin;
 
 use Hoa\Console;
 use Hoa\Irc;
@@ -10,17 +10,17 @@ use Hoa\File\Finder;
 
 class Join extends Console\Dispatcher\Kit {
 
-    protected $options = array(
-        array('socket',         Console\GetOption::REQUIRED_ARGUMENT, 's'),
-        array('username',       Console\GetOption::REQUIRED_ARGUMENT, 'u'),
-        array('channel',        Console\GetOption::REQUIRED_ARGUMENT, 'c'),
-        array('password',       Console\GetOption::REQUIRED_ARGUMENT, 'p'),
-        array('channel-filter', Console\GetOption::REQUIRED_ARGUMENT, 'f'),
-        array('websocket',      Console\GetOption::REQUIRED_ARGUMENT, 'w'),
-        array('verbose',        Console\GetOption::NO_ARGUMENT,       'v'),
-        array('help',           Console\GetOption::NO_ARGUMENT,       'h'),
-        array('help',           Console\GetOption::NO_ARGUMENT,       '?')
-    );
+    protected $options = [
+        ['socket',         Console\GetOption::REQUIRED_ARGUMENT, 's'],
+        ['username',       Console\GetOption::REQUIRED_ARGUMENT, 'u'],
+        ['channel',        Console\GetOption::REQUIRED_ARGUMENT, 'c'],
+        ['password',       Console\GetOption::REQUIRED_ARGUMENT, 'p'],
+        ['channel-filter', Console\GetOption::REQUIRED_ARGUMENT, 'f'],
+        ['websocket',      Console\GetOption::REQUIRED_ARGUMENT, 'w'],
+        ['verbose',        Console\GetOption::NO_ARGUMENT,       'v'],
+        ['help',           Console\GetOption::NO_ARGUMENT,       'h'],
+        ['help',           Console\GetOption::NO_ARGUMENT,       '?']
+    ];
 
 
 
@@ -138,6 +138,19 @@ class Join extends Console\Dispatcher\Kit {
             return;
         });
 
+        $client->on('message', function ( $bucket ) use ( $self ) {
+
+            $data   = $bucket->getData();
+            $answer = $self->getAnswer('Message', $data, null);
+
+            if(null !== $answer)
+                $bucket->getSource()->say(
+                    $data['from']['nick'] . ': ' . $answer
+                );
+
+            return;
+        });
+
         // Kick.
         $verbose and
         $client->on('kick', function ( $bucket ) {
@@ -220,7 +233,7 @@ class Join extends Console\Dispatcher\Kit {
 
         echo 'Usage   : join <options>', "\n",
              'Options :', "\n",
-             $this->makeUsageOptionsList(array(
+             $this->makeUsageOptionsList([
                  's'    => 'Socket (default: chat.freenode.org:6667).',
                  'u'    => 'Username.',
                  'c'    => 'Channel (with the leading #).',
@@ -231,14 +244,14 @@ class Join extends Console\Dispatcher\Kit {
                            'so no server).',
                  'v'    => 'Verbose.',
                  'help' => 'This help.'
-             ));
+             ]);
 
         return;
     }
 
     public function getAnswer ( $messageType, Array $data, $default = null ) {
 
-        static $_cache = array();
+        static $_cache = [];
 
         if(!isset($_cache[$messageType])) {
 
@@ -248,7 +261,7 @@ class Join extends Console\Dispatcher\Kit {
                    ->files()
                    ->name('#\.php$#');
 
-            $collect = array();
+            $collect = [];
 
             foreach($finder as $entry) {
 
@@ -266,6 +279,4 @@ class Join extends Console\Dispatcher\Kit {
 
         return $default;
     }
-}
-
 }

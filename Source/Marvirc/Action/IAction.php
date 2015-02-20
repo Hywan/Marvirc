@@ -1,6 +1,6 @@
 <?php
 
-namespace Marvirc\Action {
+namespace Marvirc\Action;
 
 interface IAction {
 
@@ -9,6 +9,4 @@ interface IAction {
     public static function getUsage ( );
 
     public static function compute ( Array $data );
-}
-
 }

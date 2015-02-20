@@ -1,6 +1,6 @@
 <?php
 
-namespace Marvirc\Bin {
+namespace Marvirc\Bin;
 
 use Hoa\Console\Dispatcher\Kit;
 use Hoa\Console\GetOption;
@@ -8,10 +8,10 @@ use Hoa\Console\Cursor;
 
 class Welcome extends Kit {
 
-    protected $options = array(
-        array('help', GetOption::NO_ARGUMENT, 'h'),
-        array('help', GetOption::NO_ARGUMENT, '?')
-    );
+    protected $options = [
+        ['help', GetOption::NO_ARGUMENT, 'h'],
+        ['help', GetOption::NO_ARGUMENT, '?']
+    ];
 
 
 
@@ -66,12 +66,10 @@ class Welcome extends Kit {
 
         echo 'Usage   : welcome <options>', "\n",
              'Options :', "\n",
-             $this->makeUsageOptionsList(array(
+             $this->makeUsageOptionsList([
                  'help' => 'This help.'
-             ));
+             ]);
 
         return;
     }
-}
-
 }

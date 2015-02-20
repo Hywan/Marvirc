@@ -1,13 +1,10 @@
 {
     "require": {
-        "hoa/console"   : "dev-master",
-        "hoa/dispatcher": "dev-master",
-        "hoa/file"      : "dev-master",
-        "hoa/http"      : "dev-master",
-        "hoa/irc"       : "dev-master",
-        "hoa/router"    : "dev-master",
-        "hoa/socket"    : "dev-master",
-        "hoa/websocket" : "dev-master"
-    },
-    "minimum-stability": "dev"
+        "hoa/console"   : "~2.0",
+        "hoa/dispatcher": "~0.1",
+        "hoa/file"      : "~0.1",
+        "hoa/irc"       : "~0.1",
+        "hoa/router"    : "~2.0",
+        "hoa/websocket" : "~2.0"
+    }
 }
