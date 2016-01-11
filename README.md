@@ -53,8 +53,7 @@ Marvirc has the following features.
 **structured** set of PHP libraries. Marvirc is based on the following awesome
 libraries: [`Hoa\Irc`](https://github.com/hoaproject/Irc),
 [`Hoa\Socket`](https://github.com/hoaproject/Socket),
-[`Hoa\Stream`](https://github.com/hoaproject/Stream) and
-[`Hoa\Core`](https://github.com/hoaproject/Core). Moreover, Marvirc uses
+[`Hoa\Stream`](https://github.com/hoaproject/Stream) etc. Moreover, Marvirc uses
 [`Hoa\Websocket`](https://github.com/hoaproject/Websocket) for an extreme
 modularity, see below.
 

@@ -2,29 +2,28 @@
 
 namespace Marvirc\Action\Mention;
 
-use Marvirc\Action;
 use Hoa\File\Finder;
+use Marvirc\Action;
 
-class Help implements Action\IAction {
-
-    public static function getPattern ( ) {
-
+class Help implements Action\IAction
+{
+    public static function getPattern()
+    {
         return '#\bhelp(\s+(?<action>[\w\\\/]+))?\b#i';
     }
 
-    public static function getUsage ( ) {
-
+    public static function getUsage()
+    {
         return 'This help.';
     }
 
-    public static function compute ( Array $data ) {
-
+    public static function compute(array $data)
+    {
         $pattern = static::getPattern();
 
         preg_match($pattern, $data['message'], $matches);
 
-        if(!isset($matches['action'])) {
-
+        if (!isset($matches['action'])) {
             $finder = new Finder();
             $finder->in(dirname(__DIR__) . DS . 'Message')
                    ->in(dirname(__DIR__) . DS . 'Mention')
@@ -32,10 +31,9 @@ class Help implements Action\IAction {
                    ->files()
                    ->name('#\.php$#');
 
-            $out = array();
+            $out = [];
 
-            foreach($finder as $entry) {
-
+            foreach ($finder as $entry) {
                 $name      = substr($entry->getBasename(), 0, -4);
                 $type      = basename(dirname($entry->getPathname()));
                 $classname = 'Marvirc\Action\\' . $type . '\\' . $name;
@@ -48,8 +46,9 @@ class Help implements Action\IAction {
         $name      = $matches['action'];
         $classname = 'Marvirc\Action\\' . str_replace('/', '\\', $name);
 
-        if(false === class_exists($classname))
+        if (false === class_exists($classname)) {
             return $name . ' does not exist.';
+        }
 
         return $classname::getUsage() . "\n\n" .
                'Pattern:' . "\n" .

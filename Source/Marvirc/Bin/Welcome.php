@@ -2,12 +2,12 @@
 
 namespace Marvirc\Bin;
 
+use Hoa\Console\Cursor;
 use Hoa\Console\Dispatcher\Kit;
 use Hoa\Console\GetOption;
-use Hoa\Console\Cursor;
 
-class Welcome extends Kit {
-
+class Welcome extends Kit
+{
     protected $options = [
         ['help', GetOption::NO_ARGUMENT, 'h'],
         ['help', GetOption::NO_ARGUMENT, '?']
@@ -15,18 +15,22 @@ class Welcome extends Kit {
 
 
 
-    public function main ( ) {
-
-        while(false !== $c = $this->getOption($v)) switch($c) {
+    public function main()
+    {
+        while (false !== $c = $this->getOption($v)) {
+            switch ($c) {
 
             case 'h':
             case '?':
                 return $this->usage();
+
               break;
 
             case '__ambiguous':
                 $this->resolveOptionAmbiguity($v);
+
               break;
+        }
         }
 
         echo 'Hello, I am Marvirc, a dead ';
@@ -62,8 +66,8 @@ class Welcome extends Kit {
         echo ' to get more informations.', "\n";
     }
 
-    public function usage ( ) {
-
+    public function usage()
+    {
         echo 'Usage   : welcome <options>', "\n",
              'Options :', "\n",
              $this->makeUsageOptionsList([

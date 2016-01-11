@@ -3,13 +3,13 @@
 namespace Marvirc\Bin;
 
 use Hoa\Console;
+use Hoa\File\Finder;
 use Hoa\Irc;
 use Hoa\Socket;
 use Hoa\Websocket;
-use Hoa\File\Finder;
 
-class Join extends Console\Dispatcher\Kit {
-
+class Join extends Console\Dispatcher\Kit
+{
     protected $options = [
         ['socket',         Console\GetOption::REQUIRED_ARGUMENT, 's'],
         ['username',       Console\GetOption::REQUIRED_ARGUMENT, 'u'],
@@ -24,8 +24,8 @@ class Join extends Console\Dispatcher\Kit {
 
 
 
-    public function main ( ) {
-
+    public function main()
+    {
         $socket    = 'tcp://chat.freenode.org:6667';
         $username  = null;
         $channel   = null;
@@ -34,59 +34,69 @@ class Join extends Console\Dispatcher\Kit {
         $websocket = null;
         $verbose   = false;
 
-        while(false !== $c = $this->getOption($v)) switch($c) {
+        while (false !== $c = $this->getOption($v)) {
+            switch ($c) {
 
             case 's':
                 $socket = 'tcp://' . $v;
+
               break;
 
             case 'u':
                 $username = $v;
+
               break;
 
             case 'c':
                 $channel = $v;
+
               break;
 
             case 'p':
                 $password = $v;
+
               break;
 
             case 'f':
                 $filter = $v;
+
               break;
 
             case 'w':
                 $websocket = 'tcp://' . $v;
+
               break;
 
             case 'v':
                 $verbose = $v;
+
               break;
 
             case 'h':
             case '?':
                 return $this->usage();
+
               break;
 
             case '__ambiguous':
                 $this->resolveOptionAmbiguity($v);
+
               break;
         }
+        }
 
-        if(empty($username) || empty($channel))
+        if (empty($username) || empty($channel)) {
             return $this->usage();
+        }
 
         $self      = $this;
         $group     = new Socket\Connection\Group();
         $client    = new Irc\Client(new Socket\Client($socket));
         $wsServer  = null;
 
-        if(null !== $websocket) {
-
+        if (null !== $websocket) {
             $wsServer = new Websocket\Server(new Socket\Server($websocket));
-            $wsServer->on('message', function ( $bucket ) use ( $channel, $client ) {
-
+            $wsServer->on('message', function ($bucket) use ($channel, $client) {
                 $data = $bucket->getData();
                 $client->say($data['message'], $channel);
 
@@ -98,24 +108,21 @@ class Join extends Console\Dispatcher\Kit {
         $group[] = $client;
 
         // Open.
-        $client->on('open', function ( $bucket ) use ( $username, $channel )  {
-
+        $client->on('open', function ($bucket) use ($username, $channel) {
             $bucket->getSource()->join($username, $channel);
 
             return;
         });
 
         // Join.
-        $client->on('join', function ( $bucket ) {
-
+        $client->on('join', function ($bucket) {
             $data = $bucket->getData();
             echo '[', $data['channel'], '] Joined!', "\n";
 
             return;
         });
 
-        $client->on('private-message', function ( $bucket ) use ( $self ) {
-
+        $client->on('private-message', function ($bucket) use ($self) {
             $data = $bucket->getData();
             $bucket->getSource()->say(
                 $self->getAnswer('PrivateMessage', $data, 'What?'),
@@ -125,36 +132,35 @@ class Join extends Console\Dispatcher\Kit {
             return;
         });
 
-        $client->on('mention', function ( $bucket ) use ( $self ) {
-
+        $client->on('mention', function ($bucket) use ($self) {
             $data   = $bucket->getData();
             $answer = $self->getAnswer('Mention', $data, null);
 
-            if(null !== $answer)
+            if (null !== $answer) {
                 $bucket->getSource()->say(
                     $data['from']['nick'] . ': ' . $answer
                 );
+            }
 
             return;
         });
 
-        $client->on('message', function ( $bucket ) use ( $self ) {
-
+        $client->on('message', function ($bucket) use ($self) {
             $data   = $bucket->getData();
             $answer = $self->getAnswer('Message', $data, null);
 
-            if(null !== $answer)
+            if (null !== $answer) {
                 $bucket->getSource()->say(
                     $data['from']['nick'] . ': ' . $answer
                 );
+            }
 
             return;
         });
 
         // Kick.
         $verbose and
-        $client->on('kick', function ( $bucket ) {
-
+        $client->on('kick', function ($bucket) {
             $node = $bucket->getSource()->getConnection()->getCurrentNode();
             echo '[', $node->getChannel(), '] Kicked :-(.', "\n";
 
@@ -162,12 +168,12 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Invite.
-        $client->on('invite', function ( $bucket ) use ( $filter ) {
-
+        $client->on('invite', function ($bucket) use ($filter) {
             $data = $bucket->getData();
 
-            if(0 === preg_match($filter, $data['invitation_channel']))
+            if (0 === preg_match($filter, $data['invitation_channel'])) {
                 return;
+            }
 
             $bucket->getSource()->join(
                 $bucket->getSource()->getConnection()->getCurrentNode()->getUsername(),
@@ -179,8 +185,7 @@ class Join extends Console\Dispatcher\Kit {
 
         // Other messages.
         $verbose and
-        $client->on('other-message', function ( $bucket ) {
-
+        $client->on('other-message', function ($bucket) {
             $data = $bucket->getData();
             $node = $bucket->getSource()->getConnection()->getCurrentNode();
 
@@ -194,8 +199,7 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Error.
-        $client->on('error', function ( $bucket ) {
-
+        $client->on('error', function ($bucket) {
             $data = $bucket->getData();
             $node = $bucket->getSource()->getConnection()->getCurrentNode();
 
@@ -209,16 +213,17 @@ class Join extends Console\Dispatcher\Kit {
         });
 
         // Message.
-        $client->on('message', function ( $bucket ) use ( $self ) {
-
+        $client->on('message', function ($bucket) use ($self) {
             $data   = $bucket->getData();
             $answer = null;
 
-            if(0 !== preg_match('/!(?=\b)/', $data['message']))
+            if (0 !== preg_match('/!(?=\b)/', $data['message'])) {
                 $answer = $self->getAnswer('Mention', $data, null);
+            }
 
-            if(null !== $answer)
+            if (null !== $answer) {
                 $bucket->getSource()->say($answer);
+            }
 
             return;
         });
@@ -229,8 +234,8 @@ class Join extends Console\Dispatcher\Kit {
         return;
     }
 
-    public function usage ( ) {
-
+    public function usage()
+    {
         echo 'Usage   : join <options>', "\n",
              'Options :', "\n",
              $this->makeUsageOptionsList([
@@ -249,13 +254,12 @@ class Join extends Console\Dispatcher\Kit {
         return;
     }
 
-    public function getAnswer ( $messageType, Array $data, $default = null ) {
-
+    public function getAnswer($messageType, array $data, $default = null)
+    {
         static $_cache = [];
 
-        if(!isset($_cache[$messageType])) {
-
-            $path = dirname(__DIR__) . DS . 'Action' . DS . $messageType;
+        if (!isset($_cache[$messageType])) {
+            $path   = dirname(__DIR__) . DS . 'Action' . DS . $messageType;
             $finder = new Finder();
             $finder->in($path)
                    ->files()
@@ -263,8 +267,7 @@ class Join extends Console\Dispatcher\Kit {
 
             $collect = [];
 
-            foreach($finder as $entry) {
-
+            foreach ($finder as $entry) {
                 $classname = 'Marvirc\Action\\' . $messageType . '\\' .
                              substr($entry->getBasename(), 0, -4);
                 $collect[$classname] = $classname::getPattern();
@@ -273,9 +276,11 @@ class Join extends Console\Dispatcher\Kit {
             $_cache[$messageType] = $collect;
         }
 
-        foreach($_cache[$messageType] as $classname => $pattern)
-            if(0 !== preg_match($pattern, $data['message']))
+        foreach ($_cache[$messageType] as $classname => $pattern) {
+            if (0 !== preg_match($pattern, $data['message'])) {
                 return $classname::compute($data);
+            }
+        }
 
         return $default;
     }
